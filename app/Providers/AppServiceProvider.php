@@ -21,13 +21,6 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
-    protected function mapApiRoutes()
-{
-    Route::prefix('api')  // This ensures /api prefix is added to all routes in api.php
-         ->middleware('api')  // API-specific middleware
-         ->namespace($this->namespace)
-         ->group(base_path('routes/api.php'));  // Loads routes from api.php
-}
 
 }
 

@@ -1,7 +1,10 @@
 
 <?php
 
-use App\Http\Controllers\NewsletterController;
-Log::info('Request received:', $request->all());
-Route::get('/newsletter', [NewsletterController::class, 'fetchNewsletter']);
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+// use Illuminate\Support\Facades\Route;
 
+Route::get('/user', function () {
+    return "Hello, World!";
+});

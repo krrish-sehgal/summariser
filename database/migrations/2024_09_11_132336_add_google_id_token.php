@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('books', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {    // add the below column to "users" table
+            $table->string('google_token')->nullable();    // add google_token column with varchar type
+
         });
     }
 
@@ -22,6 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('books');
+        Schema::table('users', function (Blueprint $table) {
+
+            $table->dropColumn('google_token');
+        });
     }
 };
