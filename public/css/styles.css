@@ -1,0 +1,137 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Soft gradient for depth */
+    color: #2c3e50; /* Deep slate gray for modern, professional text */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .navbar {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    background-color: #2c3e50; /* Bold, modern dark navy */
+  }
+  
+  h2 {
+    margin: 0;
+    color: #ecf0f1; /* Light silver for navbar text */
+  }
+  
+  .btn-logout, .btn-nav {
+    background-color: #e74c3c; /* Vivid red logout button */
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .btn-logout:hover, .btn-nav:hover {
+    background-color: #c0392b; /* Deeper red on hover */
+    transform: translateY(-2px); /* Subtle hover lift */
+  }
+  
+  .container {
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+    margin-top: 30px;
+  }
+  
+  .inbox-section, .summarizer-section, .archive-section {
+    background: #ffffff; /* Clean white for content sections */
+    padding: 20px;
+    border-radius: 10px;
+    width: 45%;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Slightly darker shadow for depth */
+  }
+  
+  h3 {
+    border-bottom: 2px solid #3498db; /* Bright blue for section headings */
+    padding-bottom: 10px;
+    color: #2980b9; /* Medium blue headings */
+  }
+  
+  ul#emailList, ul#archiveList {
+    list-style-type: none;
+    padding: 0;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
+  ul#emailList li, ul#archiveList li {
+    padding: 10px;
+    background: #ecf0f1; /* Light silver for list items */
+    margin: 5px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  ul#emailList li:hover, ul#archiveList li:hover {
+    background-color: #bdc3c7; /* Slightly darker silver on hover */
+    transform: translateX(5px); /* Subtle hover slide */
+  }
+  
+  textarea {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: none;
+    color: #2c3e50; /* Slate gray text */
+    background-color: #ecf0f1; /* Soft silver for textarea */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow */
+  }
+  
+  .btn-summarize, .btn-archive, .btn-email {
+    border: none;
+    padding: 12px 20px;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  /* Updated button colors */
+  .btn-summarize {
+    background-color: #3498db; /* Bright, energizing blue */
+    color: white;
+  }
+  
+  .btn-summarize:hover {
+    background-color: #2980b9; /* Deeper blue on hover */
+    transform: translateY(-2px); /* Subtle lift on hover */
+  }
+  
+  .btn-archive {
+    background-color: #16a085; /* Calm, professional teal for archive */
+    color: white;
+  }
+  
+  .btn-archive:hover {
+    background-color: #138d75; /* Darker teal on hover */
+    transform: translateY(-2px); /* Subtle lift on hover */
+  }
+  
+  .btn-email {
+    background-color: #8e44ad; /* Rich dark purple for email */
+    color: white;
+  }
+  
+  .btn-email:hover {
+    background-color: #732d91; /* Darker purple on hover */
+    transform: translateY(-2px); /* Subtle lift on hover */
+  }

@@ -53,7 +53,7 @@ class GoogleSocialiteController extends Controller
                 session()->regenerate();
 
                 
-                return redirect()->intended('/dashboard');
+                return redirect()->intended('/emails');
             } else {
                 // User doesn't exist, create a new one
                 $newUser = User::create([
@@ -68,7 +68,7 @@ class GoogleSocialiteController extends Controller
                 // Log in the new user and regenerate session
                 Auth::login($newUser);
                 session()->regenerate();
-                return redirect()->intended('/dashboard');
+                return redirect()->intended('/emails');
             }
         } catch (\Exception $e) {
             Log::error('Error during Google login:', ['error' => $e->getMessage()]);
@@ -199,11 +199,11 @@ class GoogleSocialiteController extends Controller
                 break;
             }
         }
-        dump($emailDetails);
+
         $this->sendSummaryEmail($emailDetails,$user);
             
         // Pass the email details to the view
-        return view('emails.index', ['emails' => $emailDetails]);
+        return view('daily_summaries', ['emails' => $emailDetails]);
 
     } catch (\Exception $e) {
         Log::error('Error fetching Gmail messages:', ['error' => $e->getMessage()]);
@@ -298,7 +298,6 @@ private function cleanEmailBody($emailBody)
     // Remove HTML tags
     $doc = new DOMDocument();
     @$doc->loadHTML($body);
-    dump($doc);
     $body = $doc->textContent;
     // Further cleanup if needed
     // ...
@@ -329,6 +328,53 @@ private function cleanEmailBody($emailBody)
         } catch (\Exception $e) {
             Log::error('Error fetching Gmail message:', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Failed to retrieve Gmail message.');
+        }
+    }
+    public function listEmailHeaders()
+    {
+        try {
+            $user = Auth::user();
+            $token = json_decode($user->google_token, true);
+            $this->googleService->setAccessToken($token);
+            // Fetch messages from the Google service
+            $messages = $this->googleService->listMessages();
+
+            $emailHeaders = [];
+            $loop = 0;
+
+            foreach ($messages as $message) {
+                Log::info('Processing message.');
+
+                // Get the ID of each message
+                $messageId = $message->getId();
+
+                // Use the getMessage function to fetch full message details
+                $email = $this->googleService->getMessage($messageId);
+
+                // Extract the necessary headers
+                $headers = $email->getPayload()->getHeaders();
+                
+                $from = $this->getHeader($headers, 'From');
+                $date = $this->getHeader($headers, 'Date');
+                $subject = $this->getHeader($headers, 'Subject');
+
+                // Store the headers in the emailHeaders array
+                $emailHeaders[] = [
+                    'from' => $from,
+                    'date' => $date,
+                    'subject' => $subject,
+                ];
+                Log::info('Email headers:', ['from' => $from, 'date' => $date, 'subject' => $subject]);
+                $loop++;
+                if ($loop >= 10) {
+                    break; // Limit processing to the first 10 messages
+                }
+            }
+
+            return view('welcome', ['emails' => $emailHeaders]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching Gmail headers:', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Failed to retrieve Gmail headers.');
         }
     }
 }
