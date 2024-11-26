@@ -105,33 +105,32 @@ body {
     transition: background-color 0.3s ease, transform 0.2s ease;
   }
   
-  /* Updated button colors */
   .btn-summarize {
-    background-color: #3498db; /* Bright, energizing blue */
+    background-color: #3498db;
     color: white;
   }
   
   .btn-summarize:hover {
-    background-color: #2980b9; /* Deeper blue on hover */
-    transform: translateY(-2px); /* Subtle lift on hover */
+    background-color: #2980b9; 
+    transform: translateY(-2px); 
   }
   
   .btn-archive {
-    background-color: #16a085; /* Calm, professional teal for archive */
+    background-color: #16a085;
     color: white;
   }
   
   .btn-archive:hover {
-    background-color: #138d75; /* Darker teal on hover */
-    transform: translateY(-2px); /* Subtle lift on hover */
+    background-color: #138d75;
+    transform: translateY(-2px); 
   }
   
   .btn-email {
-    background-color: #8e44ad; /* Rich dark purple for email */
+    background-color: #8e44ad; 
     color: white;
   }
   
   .btn-email:hover {
-    background-color: #732d91; /* Darker purple on hover */
-    transform: translateY(-2px); /* Subtle lift on hover */
+    background-color: #732d91; 
+    transform: translateY(-2px); 
   }

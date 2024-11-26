@@ -5,22 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\GoogleSocialiteController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
-// use Auth;
-
-
-// Route::get('/', function (Request $request) {
-//     if (Auth::check()) {
-//           // If the user is authenticated, you can call the function to get email headers
-//           GoogleSocialiteController::class ,'listEmailHeaders')->name('emails.headers');
-//     } else {
-//         // Show a message prompting the user to log in with Google
-//         return view('welcome', ['message' => 'Please log in with Google to view your emails.']);
-//     }
-// });
 
 Route::get('/', function () {
     if (auth()->check()) {
-        return app()->call([GoogleSocialiteController::class, 'listEmailHeaders']);
+        $controller = app()->make(GoogleSocialiteController::class);
+        return $controller->listEmailHeaders();
     }
 
     return view('welcome'); // Render your custom view for unauthenticated users
@@ -37,9 +26,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('emails/{id}', [GoogleSocialiteController::class, 'showMessage'])->name('emails.show');
 
-    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 Route::get('auth/google', [GoogleSocialiteController::class, 'redirectToGoogle'])->name('google.redirect');  // redirect to google login

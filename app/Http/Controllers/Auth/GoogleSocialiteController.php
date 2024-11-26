@@ -14,6 +14,7 @@ use App\Services\GoogleService;
 use Illuminate\Container\Attributes\Log as AttributesLog;
 use Carbon\Carbon;
 use DOMDocument;
+use Illuminate\Support\Facades\Mail;
 
 
 class GoogleSocialiteController extends Controller
@@ -142,8 +143,6 @@ class GoogleSocialiteController extends Controller
                 if ($emailDate < new \DateTime($cutOffDate)) {
                     break;
                 }
-
-                // If the body is empty, check for parts (e.g., in case of multi-part messages)
                 if (!$body || !$body->getData()) {
                     // Check if the message has parts (e.g., multi-part emails)
                     $parts = $email->getPayload()->getParts();
@@ -157,9 +156,16 @@ class GoogleSocialiteController extends Controller
                     }
                 }
 
-                // Decode the body content if found
                 $emailBody = $body && $body->getData() ? base64_decode($body->data,$strict = false) : 'No body content available';
 
+
+                
+                // dump($emailBody);
+                // // Clean the body content to remove non-text elements
+                // $html = new \Html2Text\Html2Text($emailBody);
+                // $cleanedBody = $html->getText();
+                
+                
                 
                 // dump($emailBody);
                 // // Clean the body content to remove non-text elements
@@ -195,7 +201,7 @@ class GoogleSocialiteController extends Controller
                 ];
             }
             $loop++;
-            if($loop >= 10) {
+            if($loop >= 5) {
                 break;
             }
         }
@@ -210,7 +216,7 @@ class GoogleSocialiteController extends Controller
         return redirect()->back()->with('error', 'Failed to retrieve Gmail messages.');
     }
 }
-private function sendSummaryEmail($emailDetails,$recipient)
+private function sendSummaryEmail($emailDetails, $recipient)
 {
     // Initialize the email content with an empty string
     $summaryContent = "Here are the summaries of the unread emails:\n\n";
@@ -223,7 +229,7 @@ private function sendSummaryEmail($emailDetails,$recipient)
     $email = new \SendGrid\Mail\Mail();
     
     // Set the sender's information
-    $email->setFrom("krrishsehgal03@gmail.com", "Email-Summariser");
+    $email->setFrom("saabbasd@gmail.com", "Email-Summariser");
 
     // Set the email subject
     $email->setSubject("Daily Unread Email Summaries");
@@ -235,8 +241,12 @@ private function sendSummaryEmail($emailDetails,$recipient)
     $email->addContent("text/plain", $summaryContent);
     $email->addContent("text/html", nl2br($summaryContent));  // Convert new lines to <br> for HTML content
 
+    // Retrieve the SendGrid API key from the environment variables
+    $sendgridApiKey = env('SENDGRID_API_KEY');
+    Log::info('api key', ['key' => $sendgridApiKey]);
+
     // Send the email using SendGrid
-    $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));  // Make sure your API key is stored in environment variables
+    $sendgrid = new \SendGrid($sendgridApiKey);  // Make sure your API key is stored in environment variables
 
     try {
         // Attempt to send the email
@@ -259,22 +269,22 @@ private function sendSummaryEmail($emailDetails,$recipient)
 private function callSummaryAPI(string $emailText): ?string
 {
     try {
-        // Define the system prompt
         $system_prompt = "You are a language model that summarizes emails in 3-5 bullet points.Dont include any links ";
         
+        
+        // Define the user input with the email text
+    
         // Define the user input with the email text
         $user_input = "Summarize the following in less than 100 words and only using 3-5 bullet points: {$emailText}";
         
+        
+        // Define the style prompt
+
         // Define the style prompt
         $style = "Powerpoint slide with 3-5 bullet points";
-
-        // Create the prompt that combines system prompt, user input, and style
         $full_prompt = "{$system_prompt}\n\n{$style}\n\n{$user_input}";
-
-        // Use the Gemini class to generate the summary based on the full prompt
         $summary = Gemini::generateText($full_prompt);
 
-        // Ensure the response is not empty or null
         if ($summary) {
             return $summary;
         } else {
@@ -282,25 +292,16 @@ private function callSummaryAPI(string $emailText): ?string
             return null;
         }
     } catch (\Exception $e) {
-        // Log the exception if something goes wrong
         Log::error('Error calling the Gemini API: ' . $e->getMessage());
         return null;
     }
 }
 
-
-// Function to clean the email body and remove non-text elements
 private function cleanEmailBody($emailBody)
 {
-    // Remove base64-encoded strings (images, attachments)
-
-
-    // Remove HTML tags
     $doc = new DOMDocument();
     @$doc->loadHTML($body);
     $body = $doc->textContent;
-    // Further cleanup if needed
-    // ...
 
     return $body;
 }
