@@ -13,7 +13,7 @@ class ProfileController extends Controller
 {
     public function edit(Request $request): View
     {
-        // webhook teset-5
+        // webhook teset-6
         return view('profile.edit', [
             'user' => $request->user(),
         ]);
